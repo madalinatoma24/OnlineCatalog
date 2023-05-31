@@ -6,29 +6,16 @@ using System.Diagnostics.Contracts;
 
 namespace Data
 {
-    public class DataAccesLayerSingleton
+    public class DataAccesLayer
     {
         private readonly IStudentDbContext _ctx;
-        
-        #region Singleton
-        private static DataAccesLayerSingleton? instance;
 
-        private DataAccesLayerSingleton(IStudentDbContext ctx)
+        public DataAccesLayer(IStudentDbContext ctx)
             => _ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
-
-        public static DataAccesLayerSingleton Instance 
-            => instance ??= new DataAccesLayerSingleton(new StudentsDbContext());
-
-        /// <summary>
-        /// Use this method when we want to mock or use a different implementation of IStudentDbbContext 
-        /// </summary>
-        public static DataAccesLayerSingleton GetInstance(IStudentDbContext ctx) 
-            => instance ??= new DataAccesLayerSingleton(ctx);
-        #endregion
-
 
         public void Seed()
         {
+            Console.WriteLine(_ctx.Students.GetService<ICurrentDbContext>().Context.ContextId.InstanceId);
             var studentsSeed = new Student[] {
                 new Student { Name = "Popescu Dorin", Address = new Address { Street = "Bulervadul Dacia", Number = 1, City="Ploiesti" }, Age = 22 },
                 new Student { Name = "Aldo Marina", Address = new Address { Street = "Str. Marian Moldoveanu", Number = 9, City = "Bucuresti" }, Age = 28 },
@@ -51,7 +38,7 @@ namespace Data
         public Student? CreateStudent(Student student)
         {
             if(_ctx.Students.Any(s=> s.Id== student.Id)) {
-                throw new DuplicateNameException($"Studentul cu Id-ul {student.Id} a fost deja creat");
+                throw new DuplicateNameException($"Student with id: {student.Id} already exists");
             }
             _ctx.Students.Add(student);
             _ctx.SaveChanges();
@@ -73,8 +60,8 @@ namespace Data
         public void UpdateStudentAddress(int studentId, Address newAddress)
         {
             var student = _ctx.Students.Include(s => s.Address).FirstOrDefault(s => s.Id == studentId) 
-                ?? throw new Exception("Studentul nu exista");
-
+                ?? throw new Exception("Student does not exist");
+            student.Address ??= new Address();
             student.Address.Number = newAddress.Number;
             student.Address.Street = newAddress.Street;
             student.Address.City = newAddress.City;

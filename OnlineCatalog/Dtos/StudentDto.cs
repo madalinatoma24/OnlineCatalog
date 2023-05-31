@@ -1,6 +1,6 @@
 ﻿namespace OnlineCatalog.Dtos
 {
-    public class StudentTogetDto
+    public class StudentDto
     {
         public  int Id { get; set; }
         public string Name { get; set; }

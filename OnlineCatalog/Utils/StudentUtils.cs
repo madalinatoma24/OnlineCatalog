@@ -6,17 +6,18 @@ namespace OnlineCatalog.Utils
     public static class StudentUtils
     {
 
-        public static StudentTogetDto TogetDto(this Student student)
-        {
-            if (student is null)
-            {
-                return null;
+        public static StudentDto? ToDto(this Student student)
+            => student is null ? null 
+                    : new StudentDto { 
+                        Id = student.Id, 
+                        Age = student.Age, 
+                        Name = student.Name 
+                    };
+        public static IEnumerable<StudentDto> ToDto(this IEnumerable<Student> students)
+            => students is null ? new List<StudentDto>()
+                : students.Select(s => s.ToDto());
 
-            }
-            return new StudentTogetDto { Id = student.Id, Age = student.Age, Name = student.Name };
-        }
-
-        public static Student ToEntity(this StudentToCreateDto student)
+        public static Student ToEntity(this StudentCreateDto student)
         {
             if(student is null)
             {
@@ -26,7 +27,7 @@ namespace OnlineCatalog.Utils
             return new Student { Name = student.Name, Age = student.Age };
         }
 
-        public static Student ToEntity(this StudentToUpdateDto student)
+        public static Student ToEntity(this StudentUpdateDto student)
         {
             if (student is null)
             {
@@ -36,7 +37,7 @@ namespace OnlineCatalog.Utils
             return new Student {Id= student.Id, Name = student.Name, Age = student.Age };
         }
 
-        public static Student ToEntity(this StudentToRemoveDto student)
+        public static Student ToEntity(this StudentRemoveDto student)
         {
             if (student is null)
             {

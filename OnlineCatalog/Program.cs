@@ -1,11 +1,19 @@
+using Data.Extensions;
+using Data.Models;
+using Microsoft.EntityFrameworkCore;
+using OnlineCatalog.Utils;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDataAccessLayer(optionsBuilder => {
+    optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""E:\curs 3 lab  3 tema\OnlineCatalog\Data\Database.mdf"";Integrated Security=True");
+});
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(s=> AddSwaggerDocumentation(s));

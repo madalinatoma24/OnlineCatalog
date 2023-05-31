@@ -9,20 +9,25 @@ namespace OnlineCatalog.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
+        private readonly DataAccesLayer _dataAccesLayer;
+
+        public StudentsController(DataAccesLayer dataAccesLayer)
+            => _dataAccesLayer = dataAccesLayer;
+
         /// <summary>
         /// Initialize the database
         /// </summary>
         [HttpPost("seed")]
         public void Seed() 
-            => DataAccesLayerSingleton.Instance.Seed();
+            => _dataAccesLayer.Seed();
 
         /// <summary>
         /// Extract all students from database
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<StudentTogetDto> GetAllStudents() 
-            => DataAccesLayerSingleton.Instance.GetStudents().Select(s => s.TogetDto()).ToList();
+        public IEnumerable<StudentDto> GetAllStudents()
+            => _dataAccesLayer.GetStudents().ToDto();
 
         /// <summary>
         /// Extract student by id parameter
@@ -30,8 +35,8 @@ namespace OnlineCatalog.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/id/{id}")]
-        public StudentTogetDto? GetStudentById(int id) 
-            => DataAccesLayerSingleton.Instance.GetStudentById(id)?.TogetDto();
+        public StudentDto? GetStudentById(int id) 
+            => _dataAccesLayer.GetStudentById(id)?.ToDto();
 
         /// <summary>
         /// Create a student
@@ -39,8 +44,8 @@ namespace OnlineCatalog.Controllers
         /// <param name="studentToCreate">stunde to create</param>
         /// <returns>created student</returns>
         [HttpPost]
-        public StudentTogetDto? AddStudent([FromBody] StudentToCreateDto studentToCreate) 
-            => DataAccesLayerSingleton.Instance.CreateStudent(studentToCreate.ToEntity())?.TogetDto();
+        public StudentDto? AddStudent([FromBody] StudentCreateDto studentToCreate) 
+            => _dataAccesLayer.CreateStudent(studentToCreate.ToEntity())?.ToDto();
 
 
         /// <summary>
@@ -49,8 +54,8 @@ namespace OnlineCatalog.Controllers
         /// <param name="student"></param>
         /// <returns></returns>
         [HttpPatch]
-        public StudentTogetDto? UpdateStudent(StudentToUpdateDto student)
-            => DataAccesLayerSingleton.Instance.UpdateStudent(student.ToEntity())?.TogetDto();
+        public StudentDto? UpdateStudent(StudentUpdateDto student)
+            => _dataAccesLayer.UpdateStudent(student.ToEntity())?.ToDto();
 
         /// <summary>
         /// Update student address
@@ -59,10 +64,10 @@ namespace OnlineCatalog.Controllers
         /// <param name="addressToupdate"></param>
         [HttpPut("{id}")]
         public void UpdateStudentAddress([FromRoute] int id, [FromBody] AddressToupdateDto addressToupdate)
-            => DataAccesLayerSingleton.Instance.UpdateStudentAddress(id,addressToupdate.ToEntity());
+            => _dataAccesLayer.UpdateStudentAddress(id,addressToupdate.ToEntity());
         
         [HttpDelete("{id}")]
         public void RemoveStudent(int id) 
-            => DataAccesLayerSingleton.Instance.RemoveStudent(id);
+            => _dataAccesLayer.RemoveStudent(id);
     }
 }
