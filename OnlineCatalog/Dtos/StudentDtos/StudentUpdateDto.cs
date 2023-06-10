@@ -1,4 +1,4 @@
-﻿namespace OnlineCatalog.Dtos
+﻿namespace OnlineCatalog.Dtos.StudentDtos
 {
     public class StudentUpdateDto
     {

@@ -1,19 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Models
 {
     public interface IStudentDbContext
     {
         DbSet<Student> Students { get; }
-        DbSet<Address> Addresses { get; }
+        DbSet<StudentAddress> StudentAddress { get; }
+        DbSet<TeacherAddress> TeacherAddress { get; }
+        DbSet<Cours> Courses { get; }
+        DbSet<Mark> Marks { get; }
+        DbSet<Teacher> Teachers { get; }
 
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+        bool EnsureCreated();
+        bool EnsureDeleted();
+        bool EnsureReset();
     }
 }

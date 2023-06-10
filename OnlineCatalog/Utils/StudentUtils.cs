@@ -1,5 +1,6 @@
 ﻿using Data.Models;
 using OnlineCatalog.Dtos;
+using OnlineCatalog.Dtos.StudentDtos;
 
 namespace OnlineCatalog.Utils
 {
@@ -14,7 +15,7 @@ namespace OnlineCatalog.Utils
                         Name = student.Name 
                     };
         public static IEnumerable<StudentDto> ToDto(this IEnumerable<Student> students)
-            => students is null ? new List<StudentDto>()
+            => students is null ? null
                 : students.Select(s => s.ToDto());
 
         public static Student ToEntity(this StudentCreateDto student)
@@ -37,24 +38,27 @@ namespace OnlineCatalog.Utils
             return new Student {Id= student.Id, Name = student.Name, Age = student.Age };
         }
 
-        public static Student ToEntity(this StudentRemoveDto student)
+        public static T? ToEntity<T>(this AddressToupdateDto addressToUpdate)
+            where T : Address, new()
+            => addressToUpdate is null ? null 
+                : new T { 
+                    City=addressToUpdate.City, 
+                    Number= addressToUpdate.Number, 
+                    Street=addressToUpdate.Street
+                };
+        public static StudentAddress? ToStudentEntity(this AddressToupdateDto addressToUpdate)
+            => addressToUpdate.ToEntity<StudentAddress>();
+        public static TeacherAddress? ToTeacherEntity(this AddressToupdateDto addressToUpdate)
+            => addressToUpdate.ToEntity<TeacherAddress>();
+
+
+        public static StudentMarksAverageDto ToAverageDto(this Student student, double average)
         {
-            if (student is null)
+            return new StudentMarksAverageDto
             {
-                return null;
-            }
-
-            return new Student { Id = student.Id, Name = student.Name, Age = student.Age };
-        }
-
-        public static Address ToEntity(this AddressToupdateDto addressToUpdate)
-        {
-            if (addressToUpdate is null)
-            {
-                return null;
-            }
-
-            return new Address { City=addressToUpdate.City, Number= addressToUpdate.Number, Street=addressToUpdate.Street};
+                Name = student.Name,
+                Average = average,
+            };
         }
     }
 }

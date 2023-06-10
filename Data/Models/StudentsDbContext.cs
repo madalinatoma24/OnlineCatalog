@@ -6,20 +6,19 @@ namespace Data.Models
     public class StudentsDbContext : DbContext, IStudentDbContext
     {
         public DbSet<Student> Students { get; private set; }
-        public DbSet<Address> Addresses { get; private set; }
+        public DbSet<StudentAddress> StudentAddress { get; private set; }
+        public DbSet<TeacherAddress> TeacherAddress { get; private set; }
+        public DbSet<Mark> Marks { get; private set; }
+        public DbSet<Cours> Courses { get; private set; }
+        public DbSet<Teacher> Teachers { get; private set; }
 
         public StudentsDbContext(DbContextOptions<StudentsDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            EnsureCreated();
         }
 
-        public StudentsDbContext()
-        {
-            Database.EnsureCreated();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
-            optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""E:\curs 3 lab  3 tema\OnlineCatalog\Data\Database.mdf"";Integrated Security=True");
-        }
+        public bool EnsureCreated() => Database.EnsureCreated();
+        public bool EnsureDeleted() => Database.EnsureDeleted();
+        public bool EnsureReset() => EnsureDeleted() && EnsureCreated();
     }
 }

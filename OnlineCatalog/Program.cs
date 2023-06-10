@@ -1,15 +1,14 @@
 using Data.Extensions;
-using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using OnlineCatalog.Utils;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDataAccessLayer(optionsBuilder => {
-    optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""E:\curs 3 lab  3 tema\OnlineCatalog\Data\Database.mdf"";Integrated Security=True");
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerDb"));
 });
 
 builder.Services.AddControllers();

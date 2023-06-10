@@ -1,6 +1,8 @@
 ﻿using Data;
+using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using OnlineCatalog.Dtos;
+using OnlineCatalog.Dtos.StudentDtos;
 using OnlineCatalog.Utils;
 
 namespace OnlineCatalog.Controllers
@@ -26,6 +28,8 @@ namespace OnlineCatalog.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(void))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public IEnumerable<StudentDto> GetAllStudents()
             => _dataAccesLayer.GetStudents().ToDto();
 
@@ -35,6 +39,8 @@ namespace OnlineCatalog.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/id/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(void))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public StudentDto? GetStudentById(int id) 
             => _dataAccesLayer.GetStudentById(id)?.ToDto();
 
@@ -44,6 +50,8 @@ namespace OnlineCatalog.Controllers
         /// <param name="studentToCreate">stunde to create</param>
         /// <returns>created student</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(void))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public StudentDto? AddStudent([FromBody] StudentCreateDto studentToCreate) 
             => _dataAccesLayer.CreateStudent(studentToCreate.ToEntity())?.ToDto();
 
@@ -64,7 +72,7 @@ namespace OnlineCatalog.Controllers
         /// <param name="addressToupdate"></param>
         [HttpPut("{id}")]
         public void UpdateStudentAddress([FromRoute] int id, [FromBody] AddressToupdateDto addressToupdate)
-            => _dataAccesLayer.UpdateStudentAddress(id,addressToupdate.ToEntity());
+            => _dataAccesLayer.UpdateStudentAddress(id,addressToupdate.ToEntity<StudentAddress>());
         
         [HttpDelete("{id}")]
         public void RemoveStudent(int id) 
